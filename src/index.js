@@ -5,7 +5,10 @@ import './index.css';
 class Square extends React.Component {
   render() {
     return (
-      <button className= {`${this.props.color} square`}>
+      <button 
+        className={`${this.props.color} square`}
+        onClick={() => this.props.onClick()}
+      >
         {this.props.id}
       </button>
     )
@@ -29,7 +32,7 @@ class Board extends React.Component {
         }
 
         let id = columns[columnIndex-1] + (9-rowIndex);
-        row.push(<Square color={color} id={id}></Square>);
+        row.push(<Square color={color} id={id} onClick={() => this.props.onClick(id)}/>);
       }
       board.push(<div className="board-row"> {row} </div>)
     }
@@ -40,12 +43,27 @@ class Board extends React.Component {
 }
 
 class Game extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      squareToClick: getRandomSquareId(), 
+    };
+  }
+
+  handleClick(squareId) {
+    if (this.state.squareToClick === squareId) {
+      alert("You clicked the correct square");
+    } else {
+      alert("You clicked the incorrect square");
+    }
+  }
+
   render() {
     return (
       <div className="game">
         <div className="game-board">
-          <Board></Board>
-          <Challenge></Challenge>
+          <Board onClick={id => this.handleClick(id)}/>
+          <Challenge squareToClick={this.state.squareToClick}/>
         </div>
       </div>
     )
@@ -54,10 +72,9 @@ class Game extends React.Component {
 
 class Challenge extends React.Component {
   render() {
-    let squareToClick = "d4";
     return (
       <div className="challenge">
-        {`Click ${squareToClick}`} 
+        {`Click ${this.props.squareToClick}`} 
       </div>
     )
   }
@@ -67,3 +84,13 @@ ReactDOM.render(
   <Game />,
   document.getElementById('root')
 );
+
+function getRandomSquareId() {
+  const columns = ["a", "b", "c", "d", "e", "f", "g", "h"]
+  const rows = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+  
+  const randomColumn = columns[Math.floor(Math.random() * columns.length)];
+  const randomRow = rows[Math.floor(Math.random() * rows.length)];
+
+  return randomColumn + randomRow;
+}
