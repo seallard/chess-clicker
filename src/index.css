@@ -1,0 +1,27 @@
+.square {
+  border: 0.01px solid rgb(0, 0, 0);
+  float: left;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 34px;
+  height: 34px;
+  width: 34px;
+}
+
+.dark {
+  background: #000000;
+}
+
+.light {
+  background: #ffffff;
+}
+
+.board-row:after {
+  clear: both;
+  content: "";
+  display: table;
+}
+
+.challenge {
+  margin-left: 110px;
+}
