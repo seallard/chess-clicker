@@ -2,17 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-class Square extends React.Component {
-  render() {
+function Square(props) {
     return (
       <button 
-        className={`${this.props.color} square`}
-        onClick={() => this.props.onClick()}
+        className={`${props.color} square`}
+        onClick={() => props.onClick()}
       >
-        {this.props.id}
       </button>
     )
-  }
 }
 
 class Board extends React.Component {
@@ -46,23 +43,40 @@ class Game extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      squareToClick: getRandomSquareId(), 
+      squareToClick: getRandomSquareId(),
+      elapsedTime: 0,
     };
+    this.timeStep = this.timeStep.bind(this);
+    this.startStopWatch();
   }
 
-  handleClick(squareId) {
+  handleSquareClick(squareId) {
     if (this.state.squareToClick === squareId) {
-      alert("You clicked the correct square");
+      alert(`You clicked the correct square in ${this.state.elapsedTime/1000} s`);
+      this.setState({
+        squareToClick: getRandomSquareId(),
+        elapsedTime: 0,
+      })
+
     } else {
       alert("You clicked the incorrect square");
     }
+  }
+
+  timeStep() {
+    let newElapsedTime = this.state.elapsedTime + 100;
+    this.setState({elapsedTime: newElapsedTime});
+  }
+
+  startStopWatch() {
+    setInterval(this.timeStep, 100);
   }
 
   render() {
     return (
       <div className="game">
         <div className="game-board">
-          <Board onClick={id => this.handleClick(id)}/>
+          <Board onClick={id => this.handleSquareClick(id)}/>
           <Challenge squareToClick={this.state.squareToClick}/>
         </div>
       </div>
@@ -70,14 +84,12 @@ class Game extends React.Component {
   }
 }
 
-class Challenge extends React.Component {
-  render() {
+function Challenge(props) {
     return (
       <div className="challenge">
-        {`Click ${this.props.squareToClick}`} 
+        {`Click ${props.squareToClick}`} 
       </div>
     )
-  }
 }
 
 ReactDOM.render(
